@@ -22,6 +22,17 @@ def copit():
     year = ''
     ccv = ''
 
+    category = ''
+    #this is used to edit the url accordingly
+    itemcolor = ''
+    size = ''
+
+    itemxpath = str("//*[contains(text(),'"+itemcolor+"')]")
+    print(itemxpath)
+
+    sizexpath2 = str("//*[@id='size']/option[contains(text(), '"+size+"')]")
+    print(sizexpath2)
+
     opts = Options()
     opts.add_argument('--log-level=0') 
     opts.add_argument("--disable-notifications")
@@ -29,26 +40,49 @@ def copit():
     ##PROXY = 'PROXYHERE'
     #opts.add_argument('--proxy-server=%s' % PROXY)
     driver = uc.Chrome(use_subprocess=True, version_main=104, options=opts, service_args=["--log-path=thelog.txt"])
-    
-    driver.get('https://wtfismyip.com/')
+    wait = WebDriverWait(driver,20)
+
+
+
+    # LIST ALL CATEGORIES
+    driver.get('https://www.supremenewyork.com/shop/all/'+category)
     driver.maximize_window()
 
-    size = driver.find_element(By.CSS_SELECTOR, ('#size'))  
-    size.click()
-    sizelist = driver.find_element(By.CSS_SELECTOR, ('#size > option:nth-child(1)')) 
-    sizelist.click()
+    
+    
+    finditem = driver.find_element(By.XPATH, (itemxpath))
+    finditem.click()
+    #time.sleep(3)
 
-    addit0 = driver.find_element(By.CSS_SELECTOR, ('add-remove-buttons > input'))
+    
+    size = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ('#size'))))
+    size.click()
+    
+    findsize = wait.until(EC.element_to_be_clickable((By.XPATH, (sizexpath2))))
+    findsize.click()
+    time.sleep(0.05)
+    
+    size.click()
+    time.sleep(0.1)
+
+    addit0 = driver.find_element(By.NAME, "commit")
     addit0.click()
 
-    addit1 = driver.find_element(By.CSS_SELECTOR, ('cart > a.button.checkout'))
-    addit1.click()
+    time.sleep(0.4)
 
-    buy0 = driver.find_element(By.CSS_SELECTOR, ('#order_billing_name'))
-    buy0.sendkeys(name)
+    ##addit1 = driver.find_element(By.XPATH, ("//*[contains(text(),'checkout now')]"))
+    #addit1 = wait.until(EC.presence_of_element_located(((By.CLASS_NAME, 'button checkout'))))
+    #addit1.click()
+
+    driver.get('https://www.supremenewyork.com/checkout')
+
+    time.sleep(0.5)
+
+    buy0 = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ('#order_billing_name'))))
+    buy0.send_keys(name)
 
     buy1 = driver.find_element(By.CSS_SELECTOR, ('#order_email'))
-    buy1.sendkeys(email)
+    buy1.send_keys(email)
 
     buy2 = driver.find_element(By.CSS_SELECTOR, ('#order_tel'))
     buy2.send_keys(tel)
@@ -58,7 +92,7 @@ def copit():
 
     buy4 = driver.find_element(By.CSS_SELECTOR, ('#order_billing_address_2'))
     if len(address2)>0:
-        buy4.sendkeys(address2)
+        buy4.send_keys(address2)
 
     buy5 = driver.find_element(By.CSS_SELECTOR, ('#order_billing_zip'))
     buy5.send_keys(zipcode)
@@ -68,11 +102,15 @@ def copit():
     buy6 = driver.find_element(By.CSS_SELECTOR, ('#credit_card_number'))
     buy6.send_keys(number)
 
-    buy7 = driver.find_element(By.CSS_SELECTOR, ('#credit_card_month'))
-    
-    buy7.send(month)
+    buy7 = driver.find_element(By.CSS_SELECTOR, ('#vvr > div.input.string.required.credit_card_month'))
+    buy7.click()
+   # driver.execute_script("arguments[0].click();", buy7)
 
+    #buy7.send_keys(month)
+    buy8 = wait.until(EC.presence_of_element_located((By.XPATH, ("//*[@id='credit_card_month']/option[contains(text(), "+month+")]"))))
     #buy8 = driver.find_element(By.CSS_SELECTOR, ('#credit_card_month > option:nth-child(1)'))
+    buy8.click()
+
     ###this is a combobox, 4 second line each child corresponds 2 month
 
     buy9 = driver.find_element(By.CSS_SELECTOR, ('#credit_card_year'))
@@ -83,15 +121,21 @@ def copit():
     buy11 = driver.find_element(By.CSS_SELECTOR, ('#credit_card_verification_value'))
     buy11.send_keys(ccv)
 
+
+    time.sleep(0.1)
     check = driver.find_element(By.CSS_SELECTOR, ('#terms-checkbox > label > div > ins'))
     check.click()
     ###^checkbox 4 agreement
 
-    pay = driver.find_element(By.CSS_SELECTOR, ('#pay > input'))
-    pay.click() 
+    #pay = driver.find_element(By.CSS_SELECTOR, ('#pay > input'))
+    #pay.click() 
     ###process payment button
-    cancel = driver.find_element(By.CSS_SELECTOR, ('#pay > a'))
-    cancel.click()
+    
+    time.sleep(30)
+    
+    #cancel = driver.find_element(By.CSS_SELECTOR, ('#pay > a'))
+    #cancel.click()
     ###cancel order button
-   
+
+copit()
      
