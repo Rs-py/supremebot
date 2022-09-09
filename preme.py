@@ -24,6 +24,7 @@ def copit():
 
     category = ''
     #this is used to edit the url accordingly
+    #categories choices are: new, jackets, shirts, tops_sweaters, sweatshirts, pants, shorts, t-shirts, hats, bags accessories, shoes, or skate
     itemcolor = ''
     size = ''
 
