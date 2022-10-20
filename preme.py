@@ -128,8 +128,8 @@ def copit():
     check.click()
     ###^checkbox 4 agreement
 
-    #pay = driver.find_element(By.CSS_SELECTOR, ('#pay > input'))
-    #pay.click() 
+    pay = driver.find_element(By.CSS_SELECTOR, ('#pay > input'))
+    pay.click() 
     ###process payment button
     
     time.sleep(30)
